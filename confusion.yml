@@ -1,0 +1,25 @@
+---
+- hosts: webservers
+  tasks:
+  - name: Checking for  httpd 
+    package:
+      name: httpd
+      state: present
+    check_mode: true
+    register: httpd_check
+
+  - name: installing httpd and git because httpd is not available
+    yum:
+     name: 
+       - httpd
+       - git
+     state: present
+    when: httpd_check.changed
+
+  - name: install only git as httpd is already available
+    yum:
+     name: git
+     state: present
+    when: not httpd_check.changed
+
+  
